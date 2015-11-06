@@ -20,7 +20,7 @@ class Feature < ActiveRecord::Base
     queries = search_queries(params)
 
     params[:page] = (params[:page].to_i - 1) || 0
-    params[:size] = params[:size].to_i || 10
+    params[:size] = (params[:size] || 10).to_i
     offset = params[:size] * params[:page]
 
     if queries

@@ -48,5 +48,6 @@ With `api/v3/listings`, the amount of search result returned can be controlled b
 #### Potential Future Features
 
 * Search by coordinates would be intuitively useful, as people are likely searching for listing by location. As the saying goes for real estate: "Location, Location, Location."
+* Search or filter by status. People may be more concerned about active listings only, for example.
 * Order by attributes. People may be interested in ordering by price or other features (sq_ft), or a combination of these two attributes.
 * A front-end to make entries of these queries easier.
