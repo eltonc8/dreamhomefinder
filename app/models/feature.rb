@@ -6,7 +6,36 @@ class Feature < ActiveRecord::Base
   numericality: { only_integer: true }
   validates :identity, :status, :street, presence: true
 
-  def self.listings(ops)
+  def self.listings(params)
+    queries = search_queries(params)
+
+    if queries
+      where( queries )
+    else
+      all
+    end
+  end
+
+  def self.listings_with_pagination(params)
+    queries = search_queries(params)
+
+    params[:page] = (params[:page].to_i - 1) || 0
+    params[:size] = params[:size].to_i || 10
+    offset = params[:size] * params[:page]
+
+    if queries
+      order(:id).offset( offset ).where( queries ).limit( params[:size] )
+    else
+      order(:id).offset( offset ).limit( params[:size] )
+    end
+  end
+
+  def coordinates
+    [lng, lat]
+  end
+
+  private
+  def self.search_queries(ops)
     # allowing these searches:
     #  min_price, max_price
     #  min_bed, max_bed
@@ -21,14 +50,6 @@ class Feature < ActiveRecord::Base
     queries << arel_table[:bathrooms].gteq( ops[:min_bath] ) if ops[:min_bath]
     queries << arel_table[:bathrooms].lteq( ops[:max_bath] ) if ops[:max_bath]
 
-    if queries.first
-      where( queries.inject {|first, second| first.and(second)} )
-    else
-      all
-    end
-  end
-
-  def coordinates
-    [lng, lat]
+    queries.inject {|first, second| first.and(second)}
   end
 end
