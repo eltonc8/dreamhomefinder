@@ -14,6 +14,7 @@ Data from the application was sourced from [listings.csv](https://s3.amazonaws.c
 * Ruby on Rails was used for the Backend of the application.
 ..* Arel was used to organize queries
 ..* JSON/JBuilder was used to organize the output
+* Rspec was used for test cases
 
 #### Search Method
 

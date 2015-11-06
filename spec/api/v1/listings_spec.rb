@@ -11,10 +11,8 @@ feature "v1/listings" do
     it "has contents as specified by sample.json" do
       visit "/api/v1/listings"
 
-      expect(page).to have_content '"type":"FeatureCollection"'
-      expect(page).to have_content '"features":['
-      expect(page).to have_content '"geometry":{"type"'
-      expect(page).to have_content '"coordinates":['
+      json = JSON.parse(body)
+      expect(json["type"]).to eq 'FeatureCollection'
     end
 
     it "has contents of the first feature" do

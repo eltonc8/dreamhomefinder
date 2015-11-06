@@ -18,9 +18,22 @@
 # See http://rubydoc.info/gems/rspec-core/RSpec/Core/Configuration
 RSpec.configure do |config|
   config.before(:suite) do
-    require "#{Rails.root}/db/seeds.rb"
+    Feature.destroy_all
+
+    seed_data = IO.readlines("db/listings.csv")
+    data_header = seed_data.shift.split(/[\n,]/)
+    data_header[0] = "identity" if data_header[0] == "id"
+
+    seed_data[0...40].each do |line|
+      data = line.split(/[\n,]/)
+      attributes = {}
+      data_header.length.times do |idx|
+        attributes[ data_header[idx] ] = data[idx]
+      end
+      Feature.create!( attributes )
+    end
   end
-  
+
   # rspec-expectations config goes here. You can use an alternate
   # assertion/expectation library such as wrong or the stdlib/minitest
   # assertions if you prefer.
