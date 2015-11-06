@@ -5,4 +5,8 @@ class Feature < ActiveRecord::Base
   validates :bedrooms, :bathrooms, :price, :sq_ft,
             numericality: { only_integer: true }
   validates :identity, :status, :street, presence: true
+
+  def coordinates
+    [lng, lat]
+  end
 end
