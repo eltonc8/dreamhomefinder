@@ -9,7 +9,7 @@ feature "v1/listings" do
     end
 
     context "specifications by sample.json" do
-      it "has first level descriptions" do
+      it "has first level descriptions - FeatureCollection" do
         visit "/api/v1/listings"
 
         json = JSON.parse(body)
@@ -17,7 +17,7 @@ feature "v1/listings" do
         expect(json["features"]).to be_a Array
       end
 
-      it "has second level descriptions, if exists" do
+      it "has second level descriptions - Features, if exists" do
         visit "/api/v1/listings"
 
         json = JSON.parse(body)
@@ -29,6 +29,39 @@ feature "v1/listings" do
           expect(first_feature["type"]).to eq "Feature"
           expect(first_feature["geometry"]).to be_a Hash
           expect(first_feature["properties"]).to be_a Hash
+        end
+      end
+
+      it "has tertiary level descriptions - Features:gemoetry, if exists" do
+        visit "/api/v1/listings"
+
+        json = JSON.parse(body)
+        feature_array = json["features"]
+
+        if feature_array[0]
+          feature_geometry = feature_array[0]["geometry"]
+          expect(feature_geometry).to be_a Hash
+          expect(feature_geometry["type"]).to eq("Point")
+          expect(feature_geometry["coordinates"]).to be_a Array
+          expect(feature_geometry["coordinates"]).to contain_exactly(Numeric, Numeric)
+        end
+      end
+
+      it "has tertiary level descriptions - Features:properties, if exists" do
+        visit "/api/v1/listings"
+
+        json = JSON.parse(body)
+        feature_array = json["features"]
+
+        if feature_array[0]
+          feature_geometry = feature_array[0]["properties"]
+          expect(feature_geometry).to be_a Hash
+          expect(feature_geometry["id"]).to be_a String
+          expect(feature_geometry["price"]).to be_a Numeric
+          expect(feature_geometry["street"]).to be_a String
+          expect(feature_geometry["bedrooms"]).to be_a Numeric
+          expect(feature_geometry["bathrooms"]).to be_a Numeric
+          expect(feature_geometry["sq_ft"]).to be_a Numeric
         end
       end
     end
