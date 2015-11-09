@@ -8,11 +8,29 @@ feature "v1/listings" do
       expect(page.status_code).to eq 200
     end
 
-    it "has contents as specified by sample.json" do
-      visit "/api/v1/listings"
+    context "specifications by sample.json" do
+      it "has first level descriptions" do
+        visit "/api/v1/listings"
 
-      json = JSON.parse(body)
-      expect(json["type"]).to eq 'FeatureCollection'
+        json = JSON.parse(body)
+        expect(json["type"]).to eq 'FeatureCollection'
+        expect(json["features"]).to be_a Array
+      end
+
+      it "has second level descriptions, if exists" do
+        visit "/api/v1/listings"
+
+        json = JSON.parse(body)
+        feature_array = json["features"]
+
+        if feature_array[0]
+          first_feature = feature_array[0]
+          expect(first_feature).to be_a Hash
+          expect(first_feature["type"]).to eq "Feature"
+          expect(first_feature["geometry"]).to be_a Hash
+          expect(first_feature["properties"]).to be_a Hash
+        end
+      end
     end
 
     it "has contents of the first feature" do

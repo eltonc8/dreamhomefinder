@@ -12,8 +12,10 @@ Data from the application was sourced from [listings.csv](https://s3.amazonaws.c
 ### Technology Used
 
 * Ruby on Rails was used for the Backend of the application.
-..* Arel was used to organize queries
-..* JSON/JBuilder was used to organize the output
+  * Active Record was used to model data.
+  * ARel was used to organize queries
+  * JSON/JBuilder was used to organize the output
+*
 * Rspec was used for test cases
 
 #### Search Method
@@ -52,3 +54,9 @@ With `api/v3/listings`, the amount of search result returned can be controlled b
 * Search or filter by status. People may be more concerned about active listings only, for example.
 * Order by attributes. People may be interested in ordering by price or other features (sq_ft), or a combination of these two attributes.
 * A front-end to make entries of these queries easier.
+
+#### Other Potential Underneath-the-hood Features
+
+* Divide the feature into multiple model / components. Currently there is only one object: Feature. It may be helpful for a few reasons and fully utilize the power of a relational database. For example:
+  * Separate out geography - so that properties of other types can be accommodated. Condos may occupy the same geographic spaces, but the database only needs to store one geographic entity. Search via geographic distance may also be more efficient with a smaller table (without interviewing data that are not directly relevant with geography).
+  * Separate out the status and price - so that the transactions involving each property can be separated out. A property can be sold and brought many times, and the database can save each transaction without saving the same property again.
